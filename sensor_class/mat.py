@@ -1,4 +1,4 @@
-from sensor_class.sensor import CSensor
+from sensor import CSensor
 import numpy as np
 import matplotlib.pyplot as plt
 

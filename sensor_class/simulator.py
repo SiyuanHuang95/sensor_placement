@@ -1,9 +1,9 @@
-from sensor_class.fence import CFence
-from sensor_class.human import CHuman
-from sensor_class.robot import CRobot
-from sensor_class.lidar import CLidar, CLidarPlotter
-from sensor_class.mat import CMate, CMatePlotter
-from sensor_class.utils import *
+from fence import CFence
+from human import CHuman
+from robot import CRobot
+from lidar import CLidar, CLidarPlotter
+from mat import CMate, CMatePlotter
+from utils import *
 
 import matplotlib.pyplot as plt
 
