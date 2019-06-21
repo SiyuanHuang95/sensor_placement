@@ -28,6 +28,12 @@ class CHuman(object):
 
     # Use dynamic model to update the position of the human
     def update(self, dt, omega=0.1, a=0, max_vel=1):
+        if np.hypot(self.x, self.y) < 2.5:
+            heading_robot = math.pi + math.atan2(self.x, self.y)
+            if heading_robot - self.heading > np.pi/12:
+                self.heading -= np.pi/100
+            else:
+                self.heading += np.pi /100
         self.x += self.vel * np.cos(self.heading) * dt
         self.y += self.vel * np.sin(self.heading) * dt
         self.heading += omega * dt
@@ -43,3 +49,4 @@ class CHuman(object):
         fig.plot(gx, gy, "sr")
         human_circle = plt.Circle((self.x, self.y), self.arm, color='lime', fill=True)
         fig.add_artist(human_circle)
+# TODO: Let the human avoid the collision with robot base

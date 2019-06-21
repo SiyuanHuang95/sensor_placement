@@ -104,8 +104,8 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
     def contact_flag(self, human):
         x, y = [], []
         flag = False
-        inRange = np.hypot(human.x - self.x_base, human.y - self.y_base) < np.hypot(self.length, self.width)
-        if inRange:
+        in_range = np.hypot(human.x - self.x_base, human.y - self.y_base) < np.hypot(self.length, self.width)
+        if in_range:
             corner_x = [(ix * np.cos(self.heading) + iy * np.sin(self.heading)) +
                         self.x_base for (ix, iy) in zip(self.fence_x[0:4], self.fence_y[0:4])]
             corner_y = [(ix * np.sin(self.heading) - iy * np.cos(self.heading)) +
@@ -126,3 +126,4 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
         plt.text(self.x_base, self.y_base, self.name)
 
 
+# TODO: Double check the fence reflection function

@@ -8,7 +8,7 @@ class CLidar(CSensor):
     # Adding the Lidar frame update frequence as wa parameter
     lidar_number = 0
 
-    def __init__(self, name, x=0, y=0, lidar_range=10, angle_res=0.01, max_angle=math.pi / 2, rate=4):
+    def __init__(self, name, x=0, y=0, lidar_range=7, angle_res=0.01, max_angle=math.pi / 2, rate=4):
         super(CLidar, self).__init__(name, x, y)
         self.Lrange = lidar_range
         self.angle_res = angle_res
