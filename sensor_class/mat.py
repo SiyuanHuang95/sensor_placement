@@ -52,6 +52,11 @@ class CMate(CSensor):
               self.y_base for (ix, iy) in zip(self.__mate_x, self.__mate_y)]
         return gx, gy
 
+    def detection(self, human, plt):
+        mx, my = self.detect_human(human)
+        if len(mx) > 1:
+            self.plot_scan(plt, mx, my, color='y')
+
     def detect_human(self, human):
         x, y = [], []
         in_range = np.hypot(human.x - self.x_base, human.y - self.y_base) < np.hypot(self.length, self.width)
@@ -99,19 +104,13 @@ class CMate(CSensor):
         plt.plot(gx, gy, "--b")
         plt.text(self.x_base, self.y_base, self.name)
 
-    class Factory:
-        def create(self, parameters): return CMate(**parameters)
-
-
-class CMatePlotter:
-    def __init__(self, x, y, colorcode='r'):
-        self.x = x
-        self.y = y
-        self.color = colorcode
-
-    def plot_scan(self, plt, ox, oy):
+    def plot_scan(self, plt, ox, oy, color='y'):
         x = [ox[i] for i in range(len(ox))]
         y = [oy[i] for i in range(len(ox))]
 
         for (ix, iy) in zip(x, y):
-            plt.plot([self.x, ix], [self.y, iy], self.color)
+            plt.plot([self.x_base, ix], [self.y_base, iy], color)
+
+    class Factory:
+        @staticmethod
+        def create(parameters): return CMate(**parameters)

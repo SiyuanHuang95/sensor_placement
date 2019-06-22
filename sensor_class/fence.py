@@ -53,6 +53,9 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
               self.y_base for (ix, iy) in zip(self.__fence_x, self.__fence_y)]
         return gx, gy
 
+    def detection(self, human, plt):
+        self.fence_contact(human)
+
     def fence_contact(self, human):
         if self.contact_flag(human):
             fence_vector = (self.x_base, self.y_base)
@@ -102,7 +105,6 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
         return np.abs(A1 + A2 + A3 + A4 - A) < 0.01
 
     def contact_flag(self, human):
-        x, y = [], []
         flag = False
         in_range = np.hypot(human.x - self.x_base, human.y - self.y_base) < np.hypot(self.length, self.width)
         if in_range:
@@ -117,7 +119,8 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
         return flag
 
     class Factory:
-        def create(self, parameters): return CFence(**parameters)
+        @staticmethod
+        def create(parameters): return CFence(**parameters)
 
     def plot(self, fig):
         fig.plot(self.x_base, self.y_base, ".y")

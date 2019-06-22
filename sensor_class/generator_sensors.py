@@ -25,21 +25,14 @@ class CSensorFactory:
 
     @staticmethod
     def sensor_dict(sensor_name):
-        if sensor_name == 'CMate' or sensor_name == 'CFence':
+        if sensor_name == 'CMate':
             parameters = {'x': random.randint(-5, 5), 'y': random.randint(-5, 5), 'width': random.randint(3, 5),
                           'length': random.randint(4, 6)}
         elif sensor_name == 'CLidar':
             parameters = {'x': random.randint(-5, 5), 'y': random.randint(-5, 5), 'lidar_range': random.randint(3, 10),
                           'angle_res': random.uniform(0.01, 3), 'max_angle': 3.14 * random.random(),
                           'rate': random.randint(1, 10)}
+        elif sensor_name == 'CFence':
+            parameters = {'x': random.randint(-5, 5), 'y': random.randint(-5, 5), 'width': random.randint(1, 3),
+                          'length': random.randint(4, 6)}
         return parameters
-
-
-sensors = []
-for sensor_name in CSensorFactory.sensor_name_gene(5):
-    parameters_ = CSensorFactory.sensor_dict(sensor_name)
-    sensors.append(CSensorFactory.create_sensor(sensor_name, parameters_))
-
-for sensor in sensors:
-    print(sensor)
-
