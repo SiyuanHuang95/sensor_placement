@@ -5,7 +5,7 @@ import numpy as np
 
 class CHuman(object):
     # represent the human with a circle, which stands for the arm operation, with radius r=1
-    def __init__(self, name, start_vel=0.1, start_pos_x=- 4.5, start_pos_y=-3, heading=0):
+    def __init__(self, name='worker', start_vel=0.1, start_pos_x=- 4.5, start_pos_y=-3, heading=0):
         self.x = start_pos_x
         self.y = start_pos_y
         self.vel = start_vel

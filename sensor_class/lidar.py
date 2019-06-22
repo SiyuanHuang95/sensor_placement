@@ -8,9 +8,9 @@ class CLidar(CSensor):
     # Adding the Lidar frame update frequence as wa parameter
     lidar_number = 0
 
-    def __init__(self, name, x=0, y=0, lidar_range=7, angle_res=0.01, max_angle=math.pi / 2, rate=4):
+    def __init__(self, name='lidar', x=0, y=0, lidar_range=5, angle_res=0.01, max_angle=math.pi/2, rate=4):
         super(CLidar, self).__init__(name, x, y)
-        self.Lrange = lidar_range
+        self.range = lidar_range
         self.angle_res = angle_res
         self.max_angle = max_angle
         self.range_noise = 0.01
@@ -18,8 +18,6 @@ class CLidar(CSensor):
         self.rate = rate
         CLidar.lidar_number += 1
 
-    # TODO:Check whether a point is inside of a rectangle：
-    # A Chinese Blog :https://blog.csdn.net/qq_34342154/article/details/78257827
     def object_detection(self, human):
         # Note: In the first version, Lidar only detects the human
         x, y, angle, r = [], [], [], []
@@ -41,7 +39,8 @@ class CLidar(CSensor):
         ry = [y + self.y_base for y in ry]
         return rx, ry
 
-    def signal_output(self, rx, ry, safe=3, dangerous_=2):
+    @staticmethod
+    def signal_output(rx, ry, safe=3, dangerous_=2):
         if len(rx) > 0:
             distance_min = np.min([math.hypot(ix, iy) for (ix, iy) in zip(rx, ry)])
             if distance_min < dangerous_:
@@ -51,12 +50,14 @@ class CLidar(CSensor):
             else:
                 print("Safety")
 
-    def unit_vector(self, vector):
+    @staticmethod
+    def unit_vector(vector):
         return vector / np.linalg.norm(vector)
 
-    def angle_between(self, v1, v2):
-        v1_u = self.unit_vector(v1)
-        v2_u = self.unit_vector(v2)
+    @staticmethod
+    def angle_between(v1, v2):
+        v1_u = CLidar.unit_vector(v1)
+        v2_u = CLidar.unit_vector(v2)
         return np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))
 
     def ray_casting_filter(self, xl, yl, thetal, rangel, distance):
@@ -70,9 +71,9 @@ class CLidar(CSensor):
 
             vector_1 = (xl[i], yl[i])
             vector_2 = (-self.x_base, -self.y_base)
-            angle_in_range = np.abs(self.angle_between(vector_1, vector_2)) < self.max_angle
+            angle_in_range = np.abs(CLidar.angle_between(vector_1, vector_2)) < self.max_angle
 
-            if rangedb[angleid] > rangel[i] and rangel[i] < self.Lrange and rangel[i] < distance and angle_in_range:
+            if rangedb[angleid] > rangel[i] and rangel[i] < self.range and rangel[i] < distance and angle_in_range:
                 rangedb[angleid] = rangel[i]
 
         for i in range(len(rangedb)):
@@ -86,6 +87,8 @@ class CLidar(CSensor):
         fig.plot(self.x_base, self.y_base, "^g")
         plt.text(self.x_base, self.y_base, self.name)
 
+    class Factory:
+        def create(self, parameters): return CLidar(parameters)
 
 class CLidarPlotter:
     def __init__(self, x, y, colorcode='r'):

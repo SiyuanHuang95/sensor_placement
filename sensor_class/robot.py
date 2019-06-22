@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 class CRobot(object):
-    def __init__(self, name, start_vel=1, start_pos=0):
+    def __init__(self, name='robot', start_vel=1, start_pos=0):
         self.name = name
         self.x_base = 0
         self.y_base = 0

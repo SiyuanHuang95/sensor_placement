@@ -11,7 +11,7 @@ import numpy as np
 
 mate = CMate('Mate1', x=-3, y=-4, width=4, length=6)
 fence = CFence('Fence1', x=4, y=-3, width=0.5, length=4)
-lidar = CLidar('Lidar1', x=2, y=2)
+lidar = CLidar(x=2, y=2)
 robot = CRobot('Robot1', start_vel=0.1, start_pos =0)
 human = CHuman('Worker1', start_vel=1, start_pos_x=-2.5, start_pos_y=-3, heading=np.pi/100)
 lidar_plt = CLidarPlotter(x=lidar.x_base, y=lidar.y_base, colorcode='g')
@@ -44,12 +44,12 @@ while current_time < simulation_time:
     mate.plot(axes)
     fence.plot(axes)
     lidar.plot(axes)
-    mate_plt.plot_scan(axes,mx,my)
-    if len(rx) >1:
+    mate_plt.plot_scan(axes, mx, my)
+    if len(rx) > 1:
         lidar_plt.plot_scan(axes, rx, ry)
     human.plot(axes)
     robot.plot(axes)
-    draw_warn_zone(axes,robot)
+    draw_warn_zone(axes, robot)
     plt.pause(0.01)
     plt.show()
 

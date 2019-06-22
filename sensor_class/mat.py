@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 class CMate(CSensor):
     mate_number = 0
 
-    def __init__(self, name, x=0, y=0, width=1, length=1):
+    def __init__(self, name='mat', x=0, y=0, width=1, length=1):
         super(CMate, self).__init__(name, x, y)
         self.width = width
         self.length = length
@@ -32,9 +32,10 @@ class CMate(CSensor):
         self.mate_x.append(self.length / 2)
         self.mate_y.append(self.width / 2)
 
-        self.__mate_x, self.__mate_y = self._interpolate(self.mate_x, self.mate_y)
+        self.__mate_x, self.__mate_y = CMate._interpolate(self.mate_x, self.mate_y)
 
-    def _interpolate(self, x, y):
+    @staticmethod
+    def _interpolate(x, y):
         rx, ry = [], []
         theta = 0.05
         for i in range(len(x) - 1):
@@ -55,39 +56,41 @@ class CMate(CSensor):
         x, y = [], []
         in_range = np.hypot(human.x - self.x_base, human.y - self.y_base) < np.hypot(self.length, self.width)
         if in_range:
-            self.corner_x = [(ix * np.cos(self.heading) + iy * np.sin(self.heading)) +
+            corner_x = [(ix * np.cos(self.heading) + iy * np.sin(self.heading)) +
                              self.x_base for (ix, iy) in zip(self.mate_x[0:4], self.mate_y[0:4])]
-            self.corner_y = [(ix * np.sin(self.heading) - iy * np.cos(self.heading)) +
+            corner_y = [(ix * np.sin(self.heading) - iy * np.cos(self.heading)) +
                              self.y_base for (ix, iy) in zip(self.mate_x[0:4], self.mate_y[0:4])]
             gx, gy = human.standing_area()
             for vx, vy in zip(gx, gy):
-                if self.check(vx, vy):
+                if CMate.check(corner_x, corner_y, vx, vy):
                     x.append(vx)
                     y.append(vy)
             return x, y
         else:
             return x, y
 
-    def area(self, x1, y1, x2, y2, x3, y3):
+    @staticmethod
+    def area(x1, y1, x2, y2, x3, y3):
 
         return abs((x1 * (y2 - y3) +
                     x2 * (y3 - y1) +
                     x3 * (y1 - y2)) / 2.0)
 
-    def check(self, x, y):
-        x1 = self.corner_x[0]
-        x2 = self.corner_x[1]
-        x3 = self.corner_x[2]
-        x4 = self.corner_x[3]
-        y1 = self.corner_y[0]
-        y2 = self.corner_y[1]
-        y3 = self.corner_y[2]
-        y4 = self.corner_y[3]
-        A = (self.area(x1, y1, x2, y2, x3, y3) + self.area(x1, y1, x4, y4, x3, y3))
-        A1 = self.area(x, y, x1, y1, x2, y2)
-        A2 = self.area(x, y, x2, y2, x3, y3)
-        A3 = self.area(x, y, x3, y3, x4, y4)
-        A4 = self.area(x, y, x1, y1, x4, y4)
+    @staticmethod
+    def check(corner_x, corner_y, x, y):
+        x1 = corner_x[0]
+        x2 = corner_x[1]
+        x3 = corner_x[2]
+        x4 = corner_x[3]
+        y1 = corner_y[0]
+        y2 = corner_y[1]
+        y3 = corner_y[2]
+        y4 = corner_y[3]
+        A = (CMate.area(x1, y1, x2, y2, x3, y3) + CMate.area(x1, y1, x4, y4, x3, y3))
+        A1 = CMate.area(x, y, x1, y1, x2, y2)
+        A2 = CMate.area(x, y, x2, y2, x3, y3)
+        A3 = CMate.area(x, y, x3, y3, x4, y4)
+        A4 = CMate.area(x, y, x1, y1, x4, y4)
         return np.abs(A1 + A2 + A3 + A4 - A) < 0.01
 
     def plot(self, fig):
@@ -95,6 +98,9 @@ class CMate(CSensor):
         gx, gy = self.calc_global_contour()
         plt.plot(gx, gy, "--b")
         plt.text(self.x_base, self.y_base, self.name)
+
+    class Factory:
+        def create(self, parameters): return CMate(parameters)
 
 
 class CMatePlotter:

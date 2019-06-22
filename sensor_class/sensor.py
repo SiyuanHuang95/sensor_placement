@@ -4,7 +4,7 @@ import math
 class CSensor(object):
     sensor_number = 0
 
-    def __init__(self, name, x=0, y=0):
+    def __init__(self, name='sensor', x=0, y=0):
         self.name = name
         self.x_base = x
         self.y_base = y
