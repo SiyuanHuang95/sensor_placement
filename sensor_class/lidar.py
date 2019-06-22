@@ -88,7 +88,7 @@ class CLidar(CSensor):
         plt.text(self.x_base, self.y_base, self.name)
 
     class Factory:
-        def create(self, parameters): return CLidar(parameters)
+        def create(self, parameters): return CLidar(**parameters)
 
 class CLidarPlotter:
     def __init__(self, x, y, colorcode='r'):

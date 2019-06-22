@@ -117,7 +117,7 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
         return flag
 
     class Factory:
-        def create(self, parameters): return CFence(parameters)
+        def create(self, parameters): return CFence(**parameters)
 
     def plot(self, fig):
         fig.plot(self.x_base, self.y_base, ".y")

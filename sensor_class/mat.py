@@ -100,7 +100,7 @@ class CMate(CSensor):
         plt.text(self.x_base, self.y_base, self.name)
 
     class Factory:
-        def create(self, parameters): return CMate(parameters)
+        def create(self, parameters): return CMate(**parameters)
 
 
 class CMatePlotter:
