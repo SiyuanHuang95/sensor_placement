@@ -25,33 +25,31 @@ lidar_time_gap = 1 / lidar.rate
 plt.ion()
 
 while current_time < simulation_time:
-    if current_time // lidar_time_gap -lidar_scanner == 1:
-        rx, ry = lidar.object_detection(human)
-        lidar_scanner += 1
-        lidar.signal_output(rx, ry)
-
-    human.update(dt, omega=0)
-    robot.update()
-    current_time += dt
-    fence.fence_contact(human)
-    mx, my = mate.detect_human(human)
     axes.cla()
     # axes.axis("equal")
     axes = plt.gca()
     axes.set_xlim([-10, 10])
     axes.set_ylim([-10, 10])
+    if current_time // lidar_time_gap -lidar_scanner == 1:
+        rx, ry = lidar.object_detection(human)
+        lidar_scanner += 1
+        lidar.signal_output(rx, ry)
+        if len(rx) > 1:
+            lidar.plot_scan(axes, rx, ry)
+    human.update(dt, omega=0)
+    robot.update()
+    current_time += dt
+    fence.fence_contact(human)
+    mx, my = mate.detect_human(human)
     mate.plot(axes)
     fence.plot(axes)
     lidar.plot(axes)
     mate.plot_scan(axes, mx, my)
-    if len(rx) > 1:
-        lidar.plot_scan(axes, rx, ry)
     human.plot(axes)
     robot.plot(axes)
     draw_warn_zone(axes, robot)
     plt.pause(0.01)
     plt.show()
 
-# TODO: Implement of the factory class
 
 
