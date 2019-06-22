@@ -20,3 +20,9 @@ class CSensor(object):
         else:
             return self.name
 
+    def detection(self, human, plt):
+        raise NotImplementedError
+
+    def plot(self, fig):
+        raise NotImplementedError
+
