@@ -8,7 +8,7 @@ class CSensor(object):
         self.name = name
         self.x_base = x
         self.y_base = y
-        self.heading = math.pi - math.atan2(self.x_base, self.y_base)
+        self.heading = math.pi - math.atan2(self.y_base, self.x_base)
         CSensor.sensor_number += 1
 
     def set_price(self, price=1):

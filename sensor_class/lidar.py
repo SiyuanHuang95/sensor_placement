@@ -14,7 +14,7 @@ class CLidar(CSensor):
         self.angle_res = angle_res
         self.max_angle = max_angle
         self.range_noise = 0.01
-        self.heading = math.pi / 2 + math.atan2(self.x_base, self.y_base)
+        self.heading = math.atan2(self.y_base, self.x_base)
         self.rate = rate
         CLidar.lidar_number += 1
 

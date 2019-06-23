@@ -12,7 +12,7 @@ class CSensorFactory:
     factories = {}
 
     @staticmethod
-    def create_sensor(name, parameters=[]):
+    def create_sensor(name, parameters):
         if name not in CSensorFactory.factories:
             CSensorFactory.factories[name] = eval(name + '.Factory()')
         return CSensorFactory.factories[name].create(parameters)

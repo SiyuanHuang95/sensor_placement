@@ -58,17 +58,18 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
 
     def fence_contact(self, human):
         if self.contact_flag(human):
-            fence_vector = (self.x_base, self.y_base)
-            human_vector = (1, human.heading)
+            fence_vector = np.array([self.x_base, self.y_base])
+            human_vector = CFence.unit_vector(np.array([1, human.heading]))
             rot = (CFence.angle_between(fence_vector, human_vector))
             x_ = - human_vector[0] * np.cos(2 * rot) - (-human_vector[1]) * np.sin(2 * rot)
             y_ = - human_vector[0] * np.sin(2 * rot) + (-human_vector[1]) * np.cos(2 * rot)
-            new_human = (x_, y_)
+            new_human = CFence.unit_vector(np.array([x_, y_]))
             rot_new = (CFence.angle_between(fence_vector, new_human))
-            if np.abs(np.pi - rot_new - rot) < 0.1:
+            if np.abs(np.pi - rot_new - rot) > 0.1:
                 x_ = - human_vector[0] * np.cos(-2 * rot) - (-human_vector[1]) * np.sin(-2 * rot)
                 y_ = - human_vector[0] * np.sin(-2 * rot) + (-human_vector[1]) * np.cos(-2 * rot)
-            human.heading = math.atan2(x_, y_)
+            human_vector = CFence.unit_vector(np.array([x_, y_]))
+            human.heading = math.atan2(human_vector[1], human_vector[0])
 
     @staticmethod
     def unit_vector(vector):
@@ -128,5 +129,3 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
         plt.plot(gx, gy, "--y")
         plt.text(self.x_base, self.y_base, self.name)
 
-
-# TODO: Double check the fence reflection function

@@ -12,7 +12,7 @@ class CHuman(object):
         self.name = name
         self.arm = 1
         if heading == 0:
-            self.heading = math.pi + math.atan2(self.x, self.y)
+            self.heading = math.atan2(self.x, self.y)
         else:
             self.heading = heading
 
