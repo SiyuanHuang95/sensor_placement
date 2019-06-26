@@ -19,8 +19,8 @@ class CHuman(object):
     def standing_area(self):
 
         segment = 10
-        seg_x = [self.arm * math.cos(theta) for theta in np.arange(0, np.pi * 2, 2 * np.pi / segment)]
-        seg_y = [self.arm * math.sin(theta) for theta in np.arange(0, np.pi * 2, 2 * np.pi / segment)]
+        seg_x = [(self.arm - 0.01) * math.cos(theta) for theta in np.arange(0, np.pi * 2, 2 * np.pi / segment)]
+        seg_y = [(self.arm - 0.01) * math.sin(theta) for theta in np.arange(0, np.pi * 2, 2 * np.pi / segment)]
 
         gx = np.asarray(seg_x) * math.cos(self.heading) + np.asarray(seg_y) * math.sin(self.heading) + self.x
         gy = -np.asarray(seg_x) * math.sin(self.heading) + np.asarray(seg_y) * math.cos(self.heading) + self.y
