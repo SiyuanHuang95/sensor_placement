@@ -7,12 +7,15 @@ import matplotlib.pyplot as plt
 class CFence(CSensor):  # Fence only influences the movement direction of human
     fence_number = 0
 
-    def __init__(self, name='fence', x=0, y=0, width=1, length=1):
+    def __init__(self, name='fence', x=0, y=0, length=1):
         super(CFence, self).__init__(name, x, y)
-        self.width = width
         self.length = length
+        self.width = self.width_value()
         self._calc_contour()
         CFence.fence_number += 1
+
+    def width_value(self):
+        return 0.3 * self.length
 
     def _calc_contour(self):
         self.fence_x = []

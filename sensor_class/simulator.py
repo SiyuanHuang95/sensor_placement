@@ -10,8 +10,8 @@ import numpy as np
 
 
 mate = CMate('Mate1', x=-3, y=-4, width=4, length=6)
-fence = CFence('Fence1', x=4, y=-3, width=0.5, length=4)
-lidar = CLidar(x=2, y=2)
+fence = CFence('Fence1', x=4, y=-3, length=4)
+lidar = CLidar(x=3, y=-2)
 robot = CRobot('Robot1', start_vel=0.1, start_pos=0)
 human = CHuman('Worker1', start_vel=1, start_pos_x=1.5, start_pos_y=-3, heading=np.pi/100)
 

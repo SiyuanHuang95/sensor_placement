@@ -15,6 +15,9 @@ for sensor_name in CSensorFactory.sensor_name_gene(5):
     parameters_ = CSensorFactory.sensor_dict(sensor_name)
     sensors.append(CSensorFactory.create_sensor(sensor_name, parameters_))
 
+for sensor in sensors:
+    print(sensor)
+
 human = CHuman('Worker1', start_vel=1, start_pos_x=-2.5, start_pos_y=-3, heading=np.pi/100)
 robot = CRobot('Robot1', start_vel=0.1, start_pos=0)
 
