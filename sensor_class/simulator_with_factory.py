@@ -4,16 +4,22 @@ from human import CHuman
 from robot import CRobot
 from lidar import CLidar
 from mat import CMate
+from sensor import  CSensor
+from space_control import CSpace_control
 from utils import *
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-
+sensor_number = 5
+sensor_counter = 0
 sensors = []
-for sensor_name in CSensorFactory.sensor_name_gene(5):
+for sensor_name in CSensorFactory.sensor_name_gene(sensor_number):
     parameters_ = CSensorFactory.sensor_dict(sensor_name)
-    sensors.append(CSensorFactory.create_sensor(sensor_name, parameters_))
+    generate_ = CSensorFactory.create_sensor(sensor_name, parameters_)
+    if CSpace_control.check(generate_) and sensor_counter < sensor_number:
+        sensor_counter += 1
+        sensors.append(generate_)
 
 for sensor in sensors:
     print(sensor)

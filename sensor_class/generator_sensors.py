@@ -7,7 +7,6 @@ from robot import CRobot
 from lidar import CLidar
 from mat import CMate
 
-
 class CSensorFactory:
     factories = {}
     area_length = 10
@@ -21,7 +20,7 @@ class CSensorFactory:
     @staticmethod
     def sensor_name_gene(n):
         types = CSensor.__subclasses__()
-        for i in range(n):
+        for i in range(10*n):
             yield random.choice(types).__name__
 
     @staticmethod

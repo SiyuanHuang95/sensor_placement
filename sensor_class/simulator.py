@@ -15,7 +15,6 @@ lidar = CLidar(x=3, y=-2)
 robot = CRobot('Robot1', start_vel=0.1, start_pos=0)
 human = CHuman('Worker1', start_vel=1, start_pos_x=1.5, start_pos_y=-3, heading=np.pi/100)
 
-
 lidar_scanner = 0
 current_time = 0
 dt = 0.010 # time step
@@ -50,6 +49,3 @@ while current_time < simulation_time:
     draw_warn_zone(axes, robot)
     plt.pause(0.01)
     plt.show()
-
-
-
