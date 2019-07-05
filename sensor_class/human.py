@@ -49,4 +49,3 @@ class CHuman(object):
         fig.plot(gx, gy, "sr")
         human_circle = plt.Circle((self.x, self.y), self.arm, color='lime', fill=True)
         fig.add_artist(human_circle)
-# TODO: Let the human avoid the collision with robot base

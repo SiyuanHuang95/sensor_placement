@@ -103,3 +103,5 @@ class CLidar(CSensor):
     class Factory:
         @staticmethod
         def create(parameters): return CLidar(**parameters)
+
+# TODO Add frame rate into the lidar detection function

@@ -120,6 +120,7 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
             for vx, vy in zip(gx, gy):
                 if CFence.check(corner_x, corner_y, vx, vy):
                     flag = True
+                    break
         return flag
 
     class Factory:
