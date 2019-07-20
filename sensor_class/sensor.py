@@ -29,3 +29,5 @@ class CSensor(object):
     def plot(self, fig):
         raise NotImplementedError
 
+    def cover_area(self):
+        raise NotImplementedError

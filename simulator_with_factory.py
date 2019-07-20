@@ -1,11 +1,7 @@
-from generator_sensors import CSensorFactory
-from fence import CFence
+from sensor_factory.generator_sensors import CSensorFactory
+from sensor_factory.space_control import CSpace_control
 from human import CHuman
 from robot import CRobot
-from lidar import CLidar
-from mat import CMate
-from sensor import  CSensor
-from space_control import CSpace_control
 from utils import *
 
 import matplotlib.pyplot as plt
@@ -14,6 +10,7 @@ import numpy as np
 sensor_number = 5
 sensor_counter = 0
 sensors = []
+cover_area = 0
 for sensor_name in CSensorFactory.sensor_name_gene(sensor_number):
     parameters_ = CSensorFactory.sensor_dict(sensor_name)
     generate_ = CSensorFactory.create_sensor(sensor_name, parameters_)
@@ -23,8 +20,9 @@ for sensor_name in CSensorFactory.sensor_name_gene(sensor_number):
 
 for sensor in sensors:
     print(sensor)
+    cover_area += sensor.cover_area()
 
-human = CHuman('Worker1', start_vel=5, start_pos_x=-2.5, start_pos_y=-3, heading=np.pi/100)
+human = CHuman('Worker1', start_vel=5, start_pos_x=2.5, start_pos_y=3, heading=-np.pi/1.2)
 robot = CRobot('Robot1', start_vel=0.1, start_pos=0)
 
 fig, axes = plt.subplots(1,1)
@@ -34,6 +32,7 @@ dt = 0.010 # time step
 simulation_time = 10
 
 while current_time < simulation_time:
+    current_time += dt
     human.update(dt, omega=0.1)
     robot.update()
     axes.cla()

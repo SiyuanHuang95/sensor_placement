@@ -26,7 +26,7 @@ class CSensorFactory:
     @staticmethod
     def get_position():
         position = random.randint(-CSensorFactory.area_length, CSensorFactory.area_length)
-        while abs(position) < 1:
+        while abs(position) < 0.5:
             position = random.randint(-CSensorFactory.area_length, CSensorFactory.area_length)
         return position
 
