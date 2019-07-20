@@ -3,6 +3,7 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 
+dt = 0.01
 
 class CLidar(CSensor):
     # Adding the Lidar frame update frequence as wa parameter
@@ -16,13 +17,19 @@ class CLidar(CSensor):
         self.range_noise = 0.01
         self.heading = math.atan2(self.y_base, self.x_base)
         self.rate = rate
+        self.time = 0
+        self.lidar_scanner = 0
         CLidar.lidar_number += 1
 
     def detection(self, human, plt):
-        rx, ry = self.object_detection(human)
-        if len(rx) > 1:
-            self.plot_scan(plt, rx, ry, color='g')
-            self.signal_output(rx, ry)
+        self.time += dt
+        lidar_time_gap = 1/self.rate
+        if self.time // lidar_time_gap - self.lidar_scanner == 1:
+            rx, ry = self.object_detection(human)
+            self.lidar_scanner += 1
+            if len(rx) > 1:
+                self.plot_scan(plt, rx, ry, color='g')
+                self.signal_output(rx, ry)
 
     def object_detection(self, human):
         # Note: In the first version, Lidar only detects the human
@@ -44,6 +51,9 @@ class CLidar(CSensor):
         rx = [x + self.x_base for x in rx]
         ry = [y + self.y_base for y in ry]
         return rx, ry
+
+    def cover_area(self):
+        return self.max_angle / (2 * np.pi) * np.pi * np.square(self.range)
 
     @staticmethod
     def signal_output(rx, ry, safe=3, dangerous_=2):

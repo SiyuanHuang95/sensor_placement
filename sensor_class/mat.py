@@ -111,6 +111,9 @@ class CMate(CSensor):
         for (ix, iy) in zip(x, y):
             plt.plot([self.x_base, ix], [self.y_base, iy], color)
 
+    def cover_area(self):
+        return self.length * self.width
+
     class Factory:
         @staticmethod
         def create(parameters): return CMate(**parameters)

@@ -74,6 +74,35 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
             human_vector = CFence.unit_vector(np.array([x_, y_]))
             human.heading = math.atan2(human_vector[1], human_vector[0])
 
+    def contact_flag(self, human):
+        flag = False
+        in_range = np.hypot(human.x - self.x_base, human.y - self.y_base) < np.hypot(self.length, self.width)
+        if in_range:
+            corner_x = [(ix * np.cos(self.heading) + iy * np.sin(self.heading)) +
+                        self.x_base for (ix, iy) in zip(self.fence_x[0:4], self.fence_y[0:4])]
+            corner_y = [(ix * np.sin(self.heading) - iy * np.cos(self.heading)) +
+                        self.y_base for (ix, iy) in zip(self.fence_x[0:4], self.fence_y[0:4])]
+            gx, gy = human.standing_area()
+            for vx, vy in zip(gx, gy):
+                if CFence.check(corner_x, corner_y, vx, vy):
+                    flag = True
+                    break
+        return flag
+
+    def cover_area(self):
+        dimension = self.length * self.width
+        if np.hypot(self.x_base, self.y_base) < 1:
+            cover_area = 0.5 * self.length * np.hypot(self.x_base, self.y_base) + dimension
+            return cover_area
+        else:
+            return dimension
+
+    def plot(self, fig):
+        fig.plot(self.x_base, self.y_base, ".y")
+        gx, gy = self.calc_global_contour()
+        plt.plot(gx, gy, "--y")
+        plt.text(self.x_base, self.y_base, self.name)
+
     @staticmethod
     def unit_vector(vector):
         return vector / np.linalg.norm(vector)
@@ -108,28 +137,6 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
         A4 = CFence.area(x, y, x1, y1, x4, y4)
         return np.abs(A1 + A2 + A3 + A4 - A) < 0.01
 
-    def contact_flag(self, human):
-        flag = False
-        in_range = np.hypot(human.x - self.x_base, human.y - self.y_base) < np.hypot(self.length, self.width)
-        if in_range:
-            corner_x = [(ix * np.cos(self.heading) + iy * np.sin(self.heading)) +
-                        self.x_base for (ix, iy) in zip(self.fence_x[0:4], self.fence_y[0:4])]
-            corner_y = [(ix * np.sin(self.heading) - iy * np.cos(self.heading)) +
-                        self.y_base for (ix, iy) in zip(self.fence_x[0:4], self.fence_y[0:4])]
-            gx, gy = human.standing_area()
-            for vx, vy in zip(gx, gy):
-                if CFence.check(corner_x, corner_y, vx, vy):
-                    flag = True
-                    break
-        return flag
-
     class Factory:
         @staticmethod
         def create(parameters): return CFence(**parameters)
-
-    def plot(self, fig):
-        fig.plot(self.x_base, self.y_base, ".y")
-        gx, gy = self.calc_global_contour()
-        plt.plot(gx, gy, "--y")
-        plt.text(self.x_base, self.y_base, self.name)
-
