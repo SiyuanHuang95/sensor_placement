@@ -35,7 +35,9 @@ while current_time < simulation_time:
         lidar.signal_output(rx, ry)
         if len(rx) > 1:
             lidar.plot_scan(axes, rx, ry)
-    human.update(dt, omega=0)
+    if human:
+        human.update(dt, omega=0)
+        human.plot(axes)
     robot.update()
     current_time += dt
     fence.fence_contact(human)
@@ -44,7 +46,6 @@ while current_time < simulation_time:
     fence.plot(axes)
     lidar.plot(axes)
     mate.plot_scan(axes, mx, my)
-    human.plot(axes)
     robot.plot(axes)
     draw_warn_zone(axes, robot)
     plt.pause(0.01)

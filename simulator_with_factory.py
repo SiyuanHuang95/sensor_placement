@@ -11,6 +11,8 @@ sensor_number = 5
 sensor_counter = 0
 sensors = []
 cover_area = 0
+generate_world = False
+
 for sensor_name in CSensorFactory.sensor_name_gene(sensor_number):
     parameters_ = CSensorFactory.sensor_dict(sensor_name)
     generate_ = CSensorFactory.create_sensor(sensor_name, parameters_)
@@ -31,16 +33,23 @@ current_time = 0
 dt = 0.010 # time step
 simulation_time = 10
 
+if not generate_world:
+    pass
+
 while current_time < simulation_time:
-    current_time += dt
-    human.update(dt, omega=0.1)
-    robot.update()
+
     axes.cla()
     # axes.axis("equal")
     axes = plt.gca()
     axes.set_xlim([-10, 10])
     axes.set_ylim([-10, 10])
-    human.plot(axes)
+
+    current_time += dt
+    if human:
+        human.update(dt, omega=0.1)
+        human.plot(axes)
+    robot.update()
+
     robot.plot(axes)
     draw_warn_zone(axes, robot)
     for sensor in sensors:
