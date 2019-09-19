@@ -24,25 +24,30 @@ for sensor in sensors:
     print(sensor)
     cover_area += sensor.cover_area()
 
+
+current_time = 0
+dt = 0.010  # time step
+simulation_time = 10
+
 human = CHuman('Worker1', start_vel=5, start_pos_x=2.5, start_pos_y=3, heading=-np.pi/1.2)
 robot = CRobot('Robot1', start_vel=0.1, start_pos=0)
 
-fig, axes = plt.subplots(1,1)
-plt.ion()
-current_time = 0
-dt = 0.010 # time step
-simulation_time = 10
+axes, fig = set_plot()
 
 if not generate_world:
-    pass
+    generate_word(human=human, robot=robot, axes=axes)
+    generate_world = True
+    for sensor in sensors:
+        sensor.plot(axes)
+        plt.pause(1)
+        plt.show()
 
 while current_time < simulation_time:
 
     axes.cla()
-    # axes.axis("equal")
-    axes = plt.gca()
     axes.set_xlim([-10, 10])
     axes.set_ylim([-10, 10])
+    # axes.axis("equal")
 
     current_time += dt
     if human:

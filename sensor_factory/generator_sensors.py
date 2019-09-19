@@ -37,7 +37,7 @@ class CSensorFactory:
                           'length': random.randint(4, 6)}
         elif sensor_name == 'CLidar':
             parameters = {'x': CSensorFactory.get_position(), 'y': CSensorFactory.get_position(), 'lidar_range': random.randint(3, 10),
-                          'angle_res': random.uniform(0.01, 0.1), 'max_angle': 3.14 * random.random(),
+                          'angle_res': random.uniform(0.01, 0.1), 'max_angle': 6.28 * random.uniform(0.1, 1),
                           'rate': random.randint(10, 100)}
         elif sensor_name == 'CFence':
             parameters = {'x': CSensorFactory.get_position(), 'y': CSensorFactory.get_position(), 'length': random.randint(3, 5)}

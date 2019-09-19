@@ -40,8 +40,6 @@ class CLidar(CSensor):
             vy = vy - self.y_base
             vangle = math.atan2(vy, vx)
             vr = np.hypot(vx, vy)
-            # Should we use Gaussian to simulate the noise?
-            # vr = np.hypot(vx,vy) + * random.uniform(1.0 -self.range_noise, 1.0 + self.range_noise)
             x.append(vx)
             y.append(vy)
             angle.append(vangle)
@@ -54,6 +52,17 @@ class CLidar(CSensor):
 
     def cover_area(self):
         return self.max_angle / (2 * np.pi) * np.pi * np.square(self.range)
+
+    def cover_bins(self):
+        heading = np.pi - math.atan2(self.x_base, self.y_base)
+        x_ = [self.range * np.sin(theta) * np.cos(heading) - self.range * np.cos(theta) *
+              np.sin(heading) + self.x_base
+              for theta in np.arange(-self.max_angle/2, self.max_angle/2, step=0.2)]
+
+        y_ = [self.range * np.sin(theta) * np.sin(heading) + self.range * np.cos(theta) *
+              np.cos(heading) + self.y_base
+              for theta in np.arange(-self.max_angle/2, self.max_angle/2, step=0.2)]
+        return x_, y_
 
     @staticmethod
     def signal_output(rx, ry, safe=3, dangerous_=2):
@@ -87,7 +96,7 @@ class CLidar(CSensor):
 
             vector_1 = (xl[i], yl[i])
             vector_2 = (-self.x_base, -self.y_base)
-            angle_in_range = np.abs(CLidar.angle_between(vector_1, vector_2)) < self.max_angle
+            angle_in_range = (np.abs(CLidar.angle_between(vector_1, vector_2)) < self.max_angle/2)
 
             if rangedb[angleid] > rangel[i] and rangel[i] < self.range and rangel[i] < distance and angle_in_range:
                 rangedb[angleid] = rangel[i]
@@ -101,6 +110,12 @@ class CLidar(CSensor):
 
     def plot(self, fig):
         fig.plot(self.x_base, self.y_base, "^g")
+        x, y = self.cover_bins()
+        temp_x, temp_y = x[0], y[0]
+        for (ix, iy) in zip(x, y):
+            plt.plot([self.x_base, ix], [self.y_base, iy], 'b')
+            plt.plot([temp_x, ix], [temp_y, iy], 'b')
+            temp_x, temp_y = ix, iy
         plt.text(self.x_base, self.y_base, self.name)
 
     def plot_scan(self, plt, ox, oy, color='g'):
