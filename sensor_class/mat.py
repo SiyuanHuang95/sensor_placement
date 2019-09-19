@@ -98,6 +98,9 @@ class CMate(CSensor):
         A4 = CMate.area(x, y, x1, y1, x4, y4)
         return np.abs(A1 + A2 + A3 + A4 - A) < 0.01
 
+    def visualization(self, fig):
+        self.plot(fig)
+
     def plot(self, fig):
         fig.plot(self.x_base, self.y_base, ".b")
         gx, gy = self.calc_global_contour()

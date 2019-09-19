@@ -110,13 +110,15 @@ class CLidar(CSensor):
 
     def plot(self, fig):
         fig.plot(self.x_base, self.y_base, "^g")
+        plt.text(self.x_base, self.y_base, self.name)
+
+    def visualization(self, fig):
         x, y = self.cover_bins()
         temp_x, temp_y = x[0], y[0]
         for (ix, iy) in zip(x, y):
             plt.plot([self.x_base, ix], [self.y_base, iy], 'b')
             plt.plot([temp_x, ix], [temp_y, iy], 'b')
             temp_x, temp_y = ix, iy
-        plt.text(self.x_base, self.y_base, self.name)
 
     def plot_scan(self, plt, ox, oy, color='g'):
         x = [ox[i] for i in range(len(ox))]

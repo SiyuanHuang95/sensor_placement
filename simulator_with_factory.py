@@ -33,14 +33,27 @@ human = CHuman('Worker1', start_vel=5, start_pos_x=2.5, start_pos_y=3, heading=-
 robot = CRobot('Robot1', start_vel=0.1, start_pos=0)
 
 axes, fig = set_plot()
-
+counter = 0
+save_animation = True
 if not generate_world:
     generate_word(human=human, robot=robot, axes=axes)
+
+    if save_animation:
+        plt.savefig(f'./out/fig{counter}.png')
+        counter += 1
     generate_world = True
+
+    if save_animation:
+        plt.savefig(f'./out/fig{counter}.png')
+        counter += 1
+
     for sensor in sensors:
-        sensor.plot(axes)
+        sensor.visualization(axes)
         plt.pause(1)
         plt.show()
+        if save_animation:
+            plt.savefig(f'./out/fig{counter}.png')
+            counter += 1
 
 while current_time < simulation_time:
 
@@ -62,3 +75,7 @@ while current_time < simulation_time:
         sensor.detection(human, axes)
     plt.pause(0.01)
     plt.show()
+
+    if save_animation:
+        plt.savefig(f'./out/fig{counter}.png')
+        counter += 1

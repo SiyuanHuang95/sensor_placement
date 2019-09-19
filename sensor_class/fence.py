@@ -97,6 +97,9 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
         else:
             return dimension
 
+    def visualization(self, fig):
+        self.plot(fig)
+
     def plot(self, fig):
         fig.plot(self.x_base, self.y_base, ".y")
         gx, gy = self.calc_global_contour()
