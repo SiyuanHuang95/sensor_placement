@@ -114,6 +114,21 @@ def image2gif(demo_type):
     imageio.mimsave(f'{cwd}/out/gif/{demo_type}_1.gif', images)
 
 
+def dynamic_generation_demo():
+    from sensor_class.robot import CRobot
+    from sensor_class.fence import CFence
+    from sensor_class.human import CHuman
+    from sensor_class.lidar import CLidar
+    from sensor_class.mat import CMate
+    import os
+    dangerous_zone_radius = 2
+    human = CHuman('Worker1', start_vel=5, start_pos_x=2.5, start_pos_y=3, heading=-np.pi / 1.2)
+    robot = CRobot(robot_range=dangerous_zone_radius, name='Robot1', start_vel=0.1, start_pos=0)
+    lidar = CLidar(x=3, y=-2)
+    mat = CMate('Mat1', x=-5, y=2, width=4, length=6)
+    fence = CFence('Fence1', x=-4, y=1, length=4)
+    # TODO Finish the dynamic generation
+
 if __name__ == '__main__':
     demo_type = "scenario"
     # demo_sensor(demo_type, save_flag=True)
