@@ -1,6 +1,7 @@
-from sensor import CSensor
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+
+from sensor_class.sensor import CSensor
 
 
 class CMate(CSensor):
@@ -12,6 +13,10 @@ class CMate(CSensor):
         self.length = length
         self._calc_contour()
         CMate.mate_number += 1
+        self.__corner_x = [(ix * np.cos(self.heading) + iy * np.sin(self.heading)) +
+                           self.x_base for (ix, iy) in zip(self.mate_x[0:4], self.mate_y[0:4])]
+        self.__corner_y = [(ix * np.sin(self.heading) - iy * np.cos(self.heading)) +
+                           self.y_base for (ix, iy) in zip(self.mate_x[0:4], self.mate_y[0:4])]
 
     def _calc_contour(self):
         self.mate_x = []
@@ -61,13 +66,9 @@ class CMate(CSensor):
         x, y = [], []
         in_range = np.hypot(human.x - self.x_base, human.y - self.y_base) < np.hypot(self.length, self.width)
         if in_range:
-            corner_x = [(ix * np.cos(self.heading) + iy * np.sin(self.heading)) +
-                             self.x_base for (ix, iy) in zip(self.mate_x[0:4], self.mate_y[0:4])]
-            corner_y = [(ix * np.sin(self.heading) - iy * np.cos(self.heading)) +
-                             self.y_base for (ix, iy) in zip(self.mate_x[0:4], self.mate_y[0:4])]
             gx, gy = human.standing_area()
             for vx, vy in zip(gx, gy):
-                if CMate.check(corner_x, corner_y, vx, vy):
+                if CMate.check(self.__corner_x, self.__corner_y, vx, vy):
                     x.append(vx)
                     y.append(vy)
             return x, y
@@ -116,6 +117,18 @@ class CMate(CSensor):
 
     def cover_area(self):
         return self.length * self.width
+
+    def coverage_dangerous_zone(self, coverage_dict, dangerous_zone_radius=1.5):
+        in_range = np.hypot(self.x_base, self.y_base) < (np.hypot(self.length, self.width) + dangerous_zone_radius)
+        bad_placement_flag = True
+        if not in_range:
+            return bad_placement_flag
+        else:
+            for (x, y) in coverage_dict:
+                if CMate.check(self.__corner_x, self.__corner_y, x, y):
+                    coverage_dict[(x, y)] += 1
+                    bad_placement_flag = False
+            return bad_placement_flag
 
     class Factory:
         @staticmethod

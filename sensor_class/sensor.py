@@ -12,10 +12,8 @@ class CSensor(object):
             self.heading = math.pi - math.atan2(self.x_base, self.y_base)
         else:
             self.heading = heading
+        self.price = 1
         CSensor.sensor_number += 1
-
-    def set_price(self, price=1):
-        self.price = price
 
     def __str__(self, print_all=False):
         if print_all:
@@ -30,4 +28,7 @@ class CSensor(object):
         raise NotImplementedError
 
     def cover_area(self):
+        raise NotImplementedError
+
+    def coverage_dangerous_zone(self, coverage_dict, dangerous_zone_radius=1.5):
         raise NotImplementedError

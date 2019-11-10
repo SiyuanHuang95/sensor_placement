@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 
 
 class CRobot(object):
-    def __init__(self, name='robot', start_vel=1, start_pos=0):
+    def __init__(self, robot_range=2, name='robot', start_vel=1, start_pos=0):
         self.name = name
         self.x_base = 0
         self.y_base = 0
         self.vel = start_vel
         self.pos = start_pos - math.pi / 2
-        self.range = 2.5
-        self.__baseRadius = 0.5
+        self.range = robot_range
+        self.__baseRadius = 0.2
         self.eef_x = self.range * math.sin(self.pos)
         self.eef_y = self.range * math.cos(self.pos)
 

@@ -71,7 +71,6 @@ class CHuman(object):
         v2_u = CHuman.unit_vector(v2)
         return np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))
 
-
     def __heading(self):
         rough_direction = np.random.choice(['forward', 'backward'], 1, p=[0.7, 0.3])
         if rough_direction == 'forward':
@@ -105,6 +104,6 @@ class CHuman(object):
 
     def inside_working_area(self):
         if np.abs(self.x) > area_length or np.abs(self.y) > area_length:
-            self.heading = -self.heading + np.random.normal(0, 0.4)
+            self.heading = -self.heading
             self.x -= self.x/30
             self.y -= self.y/30

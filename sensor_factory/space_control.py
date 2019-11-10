@@ -14,6 +14,11 @@ class CSpace_control():
             for col in cols:
                 if col in range(CSpace_control.length) and row in range(CSpace_control.length):
                     CSpace_control.area[row][col] = 0
+        # Use the area matrix to mark the placement and avoid the overlapping
+
+    @staticmethod
+    def reset():
+        CSpace_control.area = np.ones([CSpace_control.length, CSpace_control.length], dtype=int)
 
     @staticmethod
     def check(sensor):
@@ -24,8 +29,6 @@ class CSpace_control():
                 if col in range(CSpace_control.length) and row in range(CSpace_control.length):
                     if CSpace_control.area[row][col] == 0:
                         flag = False
-        if flag:
-            CSpace_control.update(sensor)
         return flag
 
     @staticmethod
@@ -41,9 +44,14 @@ class CSpace_control():
         if sensor.name == 'lidar':
             rows = np.arange(x_-1, x_+1, dtype=int)
             cols = np.arange(y_-1, y_+1, dtype=int)
-        else:
-            mean = (sensor.length + sensor.width)//2
+        elif sensor.name == 'fence':
+            mean = (sensor.length + sensor.width)//4
             rows = np.arange(x_ - mean, x_ + mean, dtype=int)
             cols = np.arange(y_ - mean, y_ + mean, dtype=int)
+        elif sensor.name == 'mat':
+            rows = np.arange(x_ - 1, x_ + 1, dtype=int)
+            cols = np.arange(y_ - 1, y_ + 1, dtype=int)
+        else:
+            print("Wrong Sensor Name")
         return rows, cols
 
