@@ -1,6 +1,5 @@
 **/pyc
 .idea/
-*/out/
 venv/
 sensor_class/__pycache__/
 **/__pycache__/
@@ -9,4 +8,4 @@ pyc
 __pycache__
 .directory
 */venv
-/out
+
