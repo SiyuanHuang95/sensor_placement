@@ -117,6 +117,7 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
 
     def visualization(self, fig):
         self.plot(fig)
+        plt.text(-7, -7, f"Generate One Fence", fontsize=14, color='red')
 
     @staticmethod
     def unit_vector(vector):
