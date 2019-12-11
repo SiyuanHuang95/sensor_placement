@@ -17,38 +17,46 @@ class CSensorFactory:
     @staticmethod
     def create_sensor(name, parameters):
         if name not in CSensorFactory.factories:
-         CSensorFactory.factories[name] = eval(name + '.Factory()')
+            # here we use a dictionary to store the API for the factory
+            # key is the sensor name, value is the sensor.Factory(), e.g. the member method of the corresponding class
+            CSensorFactory.factories[name] = eval(name + '.Factory()')
         return CSensorFactory.factories[name].create(parameters)
 
+    # we choose the sensor type first based on the random choice of the sensor names
     @staticmethod
     def sensor_name_gene(n):
         name_list = []
         types = CSensor.__subclasses__()
+        # return the sensor names which coming from the subclass of the same base class
         for i in range(10 * n):
             name_list.append(random.choice(types).__name__)
         return name_list
 
+    # dummy API to get sensor positions considering the fact that one sensor should not be generated two away from the
+    # robot, otherwise it will be totally a waste
     @staticmethod
     def get_position_lidar():
-        position = random.randint(-7,  7)
+        position = random.randint(-7, 7)
         while abs(position) < 0.2:
             position = CSensorFactory.get_position_lidar()
         return position
 
     @staticmethod
     def get_position_mate():
-        position = random.randint(-CSensorFactory.dangerous_zone_radius-2, CSensorFactory.dangerous_zone_radius+2)
+        position = random.randint(-CSensorFactory.dangerous_zone_radius - 2, CSensorFactory.dangerous_zone_radius + 2)
         while abs(position) < 0.2:
             position = CSensorFactory.get_position_mate()
         return position
 
     @staticmethod
     def get_position_fence():
-        position = random.randint(-CSensorFactory.dangerous_zone_radius-2, CSensorFactory.dangerous_zone_radius+2)
+        position = random.randint(-CSensorFactory.dangerous_zone_radius - 2, CSensorFactory.dangerous_zone_radius + 2)
         while abs(position) < CSensorFactory.dangerous_zone_radius:
             position = CSensorFactory.get_position_fence()
         return position
 
+    # the sensor dictionary stores some parameters which is more reasonable than randomly generated, the parameters here
+    # could come from the marketing
     @staticmethod
     def sensor_dict(sensor_name, random_generate=False):
         if random_generate:

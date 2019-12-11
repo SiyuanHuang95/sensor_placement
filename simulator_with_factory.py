@@ -12,13 +12,17 @@ dangerous_zone_radius = 2
 sensors = []
 
 CSensorFactory.dangerous_zone_radius = dangerous_zone_radius
+# get all possible sensor_configurations
 sensor_configurations = get_sensor_configurations(configuration_number, dangerous_zone_radius)
 sensor_number_list = [sensor_configurations[i]['sensor number'] for i in range(len(sensor_configurations))]
 minimum_number_configuration = sensor_number_list.index(min(sensor_number_list))
 
+# here we choose the sensor configuration with the minimum sensor number
 for i in range(len(sensor_configurations[minimum_number_configuration]['parameters'])):
+    # use Factory to create the corresponding sensor object
     generate_ = CSensorFactory.create_sensor(sensor_configurations[8]['parameters'][i][0],
                                              sensor_configurations[8]['parameters'][i][1])
+    # store the sensor objects in one list
     sensors.append(generate_)
 
 axes, fig = set_plot()
@@ -28,6 +32,7 @@ current_time = 0
 dt = 0.010  # time step
 simulation_time = 10
 
+# set working scenario
 human = CHuman('Worker1', start_vel=5, start_pos_x=2.5, start_pos_y=3, heading=-np.pi / 1.2)
 robot = CRobot(robot_range=dangerous_zone_radius, name='Robot1', start_vel=0.1, start_pos=0)
 

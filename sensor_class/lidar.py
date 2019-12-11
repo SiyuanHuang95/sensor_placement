@@ -23,7 +23,7 @@ class CLidar(CSensor):
         self.lidar_scanner = 0
         self.distance2robot = np.hypot(self.x_base, self.y_base)
         self.occlusion_angle = np.arcsin(robot_base_radius / self.distance2robot)
-        self.status=0
+        self.status = 0
         CLidar.lidar_number += 1
 
     def detection(self, human, plt):
@@ -114,7 +114,7 @@ class CLidar(CSensor):
                 if rangedb[angleid] > rangel[i] and rangel[i] < self.range and rangel[i] < distance and angle_in_range:
                     rangedb[angleid] = rangel[i]
             elif not robot_in_between:
-                if rangedb[angleid] > rangel[i] and rangel[i] < self.range and rangel[i] < distance and angle_in_range\
+                if rangedb[angleid] > rangel[i] and rangel[i] < self.range and rangel[i] < distance and angle_in_range \
                         and not angle_in_occlusion:
                     rangedb[angleid] = rangel[i]
 
@@ -162,8 +162,8 @@ class CLidar(CSensor):
                 vector_1 = (keys[i][0], keys[i][1])
                 vector_2 = (-self.x_base, -self.y_base)
 
-                temp_angle =np.abs(CLidar.angle_between(vector_1, vector_2))
-                angle_in_range = ( temp_angle < self.max_angle / 2)
+                temp_angle = np.abs(CLidar.angle_between(vector_1, vector_2))
+                angle_in_range = (temp_angle < self.max_angle / 2)
                 angle_in_occlusion = temp_angle < self.occlusion_angle
 
                 temp_distance = np.hypot(keys[i][0] - self.x_base, keys[i][1] - self.y_base)

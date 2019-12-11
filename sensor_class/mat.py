@@ -6,6 +6,7 @@ from sensor_class.sensor import CSensor
 
 class CMate(CSensor):
     mate_number = 0
+
     # Mate is kind of combination of laser and fence
     # it used visualization method from fence, but detection method from laser
     # please that two first

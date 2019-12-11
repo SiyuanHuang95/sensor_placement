@@ -15,7 +15,7 @@ def draw_warn_zone(fig, robot):
 
 
 # visualize the world generation process
-def generate_word(human, robot, axes, save_flag = False):
+def generate_word(human, robot, axes, save_flag=False):
     axes.text(-8, 8, 'Generate World', fontsize=12)
     human.plot(axes)
     plt.pause(1)
@@ -45,7 +45,7 @@ def demo_sensor(demo_type, save_flag=False):
     lidar = CLidar(x=3, y=-2)
     mat = CMate('Mat1', x=-5, y=2, width=4, length=6)
     fence = CFence('Fence1', x=-4, y=1, length=4)
-    human = CHuman('Worker1', start_vel=2, start_pos_x=-1, start_pos_y=2, heading=np.pi/0.9)
+    human = CHuman('Worker1', start_vel=2, start_pos_x=-1, start_pos_y=2, heading=np.pi / 0.9)
     if demo_type == "lidar":
         sensor = lidar
     elif demo_type == "mat":
@@ -131,7 +131,7 @@ def dynamic_generation_demo(save_flag):
     import os
     cwd = os.getcwd()
     dangerous_zone_radius = 2
-    human = CHuman('Worker1', start_vel=1.5, start_pos_x=-5, start_pos_y=3, heading=2*np.pi)
+    human = CHuman('Worker1', start_vel=1.5, start_pos_x=-5, start_pos_y=3, heading=2 * np.pi)
     robot = CRobot(robot_range=dangerous_zone_radius, name='Robot1', start_vel=0.1, start_pos=0)
     sensors = []
     working_sensors = []
@@ -146,7 +146,7 @@ def dynamic_generation_demo(save_flag):
     dt = 0.08  # time step
     simulation_time = 20
     generate_word(human=human, robot=robot, axes=axes)
-    save_image(plt=plt, number=counter,cwd=cwd,sub_folder="dynamic_generation", save_flag=save_flag)
+    save_image(plt=plt, number=counter, cwd=cwd, sub_folder="dynamic_generation", save_flag=save_flag)
     counter += 1
     generation_time = 1
 

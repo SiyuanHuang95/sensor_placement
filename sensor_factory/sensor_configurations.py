@@ -13,6 +13,9 @@ def generation_reset(sensors, detector, sensor_parameters):
     sensor_parameters.clear()
 
 
+# kind of dirty codes, need to be optimized in the future
+# this function will keep adding new sensor to sensor configuration as long as there is still 0-element in the
+# coverage dictionary, which indicates some grid points are still uncovered.
 def get_sensor_configurations(configuration_number=100, dangerous_zone_radius=2):
     configuration_counter = 0
     sensor_counter = 0
