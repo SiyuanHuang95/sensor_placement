@@ -1,17 +1,34 @@
 ## Sensor Placement
 
-This repos is for the optimization algorithms of the sensor placesment.
+This repository serves for simulation environment of the optimization algorithms w.r.t the sensor placement. 
 
-## Sensor Type
+In one word, this optimization problem could be defined as how to use the minimal number or 
+cheapest sensor sets to ensure a best safety criteria. In the current version, we define the safety situation, when
+As
+
+
+![](sensor_class/out/scenario/sketch_problem.png | width=100)
+## Sensor Type.
 1. Laser
     - Position, angle resolution, frame rate, detection range (distance and angle range)
-    - detect worker's position when in its' range  
+    - Detect worker's position when the worker moves in its' range  
+ <!---
+ ![laser](sensor_class/out/gif/lidar.gif)
+ -->
+
 2. Fence
     - Length, width, position
-    - reflect the human motion's direction
+    - Reflect the human motion's direction
+ <!---
+    ![Fence](sensor_class/out/gif/fence.gif)
+-->
+
 3. Mate
     - Position, length, width
-    - detect worker's position when directly on its' surface  
+    - Detect worker's position when the worker directly on its' surface  
+ <!---
+    ![Mate](sensor_class/out/gif/mat.gif)
+-->
 
 ## Working Configuration
 1. One robot in the centre
