@@ -4,6 +4,7 @@ import math
 class CSensor(object):
     sensor_number = 0
 
+    # the base class for the sensor
     def __init__(self, name='sensor', x=0, y=0, heading=0):
         self.name = name
         self.x_base = x
@@ -21,6 +22,7 @@ class CSensor(object):
         else:
             return self.name
 
+    # Tip: Use  NotImplementedError to remind you for override the virtual function
     def detection(self, human, plt):
         raise NotImplementedError
 

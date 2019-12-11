@@ -19,6 +19,7 @@ class CRobot(object):
         self.eef_x = self.range * math.sin(self.pos)
         self.eef_y = self.range * math.cos(self.pos)
 
+    # used for visualization
     def plot(self, fig):
         # fig.plot(self.x_base,self.y_base,"sr")
         fig.plot(self.eef_x, self.eef_y, "sr")

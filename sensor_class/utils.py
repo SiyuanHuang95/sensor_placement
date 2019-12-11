@@ -5,6 +5,7 @@ import numpy as np
 counter = 0
 
 
+# visualize the warning zone
 def draw_warn_zone(fig, robot):
     dz = plt.Circle((robot.x_base, robot.y_base), robot.range, color='red', fill=False)
     fig.add_artist(dz)
@@ -13,6 +14,7 @@ def draw_warn_zone(fig, robot):
     fig.add_artist(wz)
 
 
+# visualize the world generation process
 def generate_word(human, robot, axes, save_flag = False):
     axes.text(-8, 8, 'Generate World', fontsize=12)
     human.plot(axes)
@@ -33,6 +35,7 @@ def set_plot():
     return axes, fig
 
 
+# some dirty codes to save demo
 def demo_sensor(demo_type, save_flag=False):
     from sensor_class.fence import CFence
     from sensor_class.human import CHuman
@@ -84,6 +87,7 @@ def demo_sensor(demo_type, save_flag=False):
             counter += 1
 
 
+# convert image to video
 def image2video(demo_type):
     import cv2
     import glob
@@ -104,6 +108,7 @@ def image2video(demo_type):
     out.release()
 
 
+# API ti convert image to gif
 def image2gif(demo_type):
     import imageio
     import glob

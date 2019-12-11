@@ -20,8 +20,9 @@ class CHuman(object):
         else:
             self.heading = heading
 
+    # We represent the human area as a circle
+    # take grid points on that circle for future calculation
     def standing_area(self):
-
         segment = 10
         seg_x = [(self.arm - 0.01) * math.cos(theta) for theta in
                  np.arange(0, np.pi * 2, 2 * np.pi / segment)]
@@ -32,6 +33,7 @@ class CHuman(object):
         gy = -np.asarray(seg_x) * math.sin(self.heading) + np.asarray(seg_y) * math.cos(self.heading) + self.y
         return gx, gy
 
+    # used for visualization of the human's heading direction
     def __heading_line(self):
         end_point_x = self.x + np.cos(self.heading)
         end_point_y = self.y + np.sin(self.heading)
@@ -40,10 +42,12 @@ class CHuman(object):
     # Use dynamic model to update the position of the human
     def update(self, dt, omega=0.1, a=0, max_vel=1):
         self.odometry()
+        # avoid direct collision with robot
         if np.hypot(self.x, self.y) < 1:
             current_pos = np.array([self.x, self.y])
             current_heading = np.array([1, self.heading])
             self.heading += CHuman.angle_between(current_pos, current_heading)
+        # when near the robot, speed up the motion change process
         elif np.hypot(self.x, self.y) < 1.5:
             current_pos = np.array([self.x, self.y])
             current_heading = np.array([1, self.heading])
@@ -71,6 +75,7 @@ class CHuman(object):
         v2_u = CHuman.unit_vector(v2)
         return np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))
 
+    # random to choose the motion direction
     def __heading(self):
         rough_direction = np.random.choice(['forward', 'backward'], 1, p=[0.7, 0.3])
         if rough_direction == 'forward':
@@ -78,11 +83,14 @@ class CHuman(object):
         else:
             middle_angle = math.atan2(self.y, self.x)
         print(rough_direction)
+        # the angle update based on the random sampling from a gaussian form
         angle = middle_angle + np.random.uniform(-np.pi/2, np.pi/2)
         return angle
 
     def odometry(self):
+        # always ensure the worker in the working area
         self.inside_working_area()
+        # after moving for some distance, start changing the motion states
         if np.hypot((self.x - self.temp_start_x), (self.y - self.temp_start_y)) > 1:
             # print("change human direction")
             self.change_direction()
@@ -102,6 +110,7 @@ class CHuman(object):
         human_circle = plt.Circle((self.x, self.y), self.arm, color='lime', fill=True)
         fig.add_artist(human_circle)
 
+    # when near the boarder of the working space, quickly change the motion states
     def inside_working_area(self):
         if np.abs(self.x) > area_length or np.abs(self.y) > area_length:
             self.heading = -self.heading * 1.3

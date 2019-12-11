@@ -16,16 +16,19 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
         self.fence_x, self.fence_y = CFence._calc_contour(self.width, self.length)
         self.__fence_x, self.__fence_y = CFence._interpolate(self.fence_x, self.fence_y)
 
-        self.__corner_x = [(ix * np.cos(self.heading) + iy * np.sin(self.heading)) +
-                           self.x_base for (ix, iy) in zip(self.fence_x[0:4], self.fence_y[0:4])]
+        self.y_ = [(ix * np.cos(self.heading) + iy * np.sin(self.heading)) + self.x_base for (ix, iy) in
+                   zip(self.fence_x[0:4], self.fence_y[0:4])]
+        self.__corner_x = self.y_
         self.__corner_y = [(ix * np.sin(self.heading) - iy * np.cos(self.heading)) +
                            self.y_base for (ix, iy) in zip(self.fence_x[0:4], self.fence_y[0:4])]
         self.changed_flag = False
         self.counter = 0
 
+    # if not specific defined, we set the width = 0.3 * length
     def width_value(self):
         return 0.3 * self.length
 
+    # calculate the contour points of the fence
     @staticmethod
     def _calc_contour(width, length):
         fence_x = []
@@ -47,19 +50,20 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
         fence_y.append(width / 2)
 
         return fence_x, fence_y
-        # self.__fence_x, self.__fence_y = CFence._interpolate(fence_x, fence_y)
 
+    # Interpolate the contour from the corner points
     @staticmethod
     def _interpolate(x, y):
         rx, ry = [], []
-        dtheta = 0.05
+        dtheta = 0.05  # set the interpolate step
         for i in range(len(x) - 1):
-            rx.extend([(1.0 - θ) * x[i] + θ * x[i + 1]  # interpolate the edges
-                       for θ in np.arange(0.0, 1.0, dtheta)])
-            ry.extend([(1.0 - θ) * y[i] + θ * y[i + 1]
-                       for θ in np.arange(0.0, 1.0, dtheta)])
+            rx.extend([(1.0 - theta) * x[i] + theta * x[i + 1]  # interpolate the edges
+                       for theta in np.arange(0.0, 1.0, dtheta)])
+            ry.extend([(1.0 - theta) * y[i] + theta * y[i + 1]
+                       for theta in np.arange(0.0, 1.0, dtheta)])
         return rx, ry
 
+    # Get the global contour with the help of coordinate transformation
     def calc_global_contour(self):
         gx = [(ix * np.cos(self.heading) + iy * np.sin(self.heading)) +
               self.x_base for (ix, iy) in zip(self.__fence_x, self.__fence_y)]
@@ -70,6 +74,7 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
     def detection(self, human, plt):
         self.fence_contact(human)
 
+    # Reflect the human motion's direction, when human contacts the fence
     def fence_contact(self, human):
         if self.contact_flag(human) and not self.changed_flag:
             fence_vector = np.array([self.x_base, self.y_base])
@@ -85,11 +90,15 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
             human_vector = CFence.unit_vector(np.array([x_, y_]))
             human.heading = math.atan2(human_vector[1], human_vector[0])
             self.changed_flag = True
+        #  The changed_flag set here is used to avoid frequently direction change of the human motion
+        # in the case, where the human does not have enough time to go away and thus will be detected as contact then
+        # change his direction one more time, in one dead loop...
         if self.changed_flag:
             self.counter += 1
             if self.counter >= 30:
                 self.changed_flag = False
 
+    # Contact flag: whether human grid points are inside the fence geometry range
     def contact_flag(self, human):
         flag = False
         in_range = np.hypot(human.x - self.x_base, human.y - self.y_base) < np.hypot(self.length, self.width)
@@ -136,6 +145,9 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
                     x2 * (y3 - y1) +
                     x3 * (y1 - y2)) / 2.0)
 
+    # how to check one point is inside the rectangle:
+    # judge the sum of the area  of four triangles which is formed from checked point and the rectangle
+    # corner is bigger or equal with the rectangle
     @staticmethod
     def check(corner_x, corner_y, x, y):
         x1 = corner_x[0]
@@ -158,11 +170,12 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
         extend_x, extend_y = CFence._calc_contour(extend_width, self.length)
 
         extended_corner_x = [(ix * np.cos(self.heading) + iy * np.sin(self.heading)) +
-                           self.x_base for (ix, iy) in zip(extend_x[0:4],  extend_y[0:4])]
+                             self.x_base for (ix, iy) in zip(extend_x[0:4], extend_y[0:4])]
         extended_corner_y = [(ix * np.sin(self.heading) - iy * np.cos(self.heading)) +
-                           self.y_base for (ix, iy) in zip(extend_x[0:4],  extend_y[0:4])]
+                             self.y_base for (ix, iy) in zip(extend_x[0:4], extend_y[0:4])]
         return extended_corner_x, extended_corner_y
 
+    # check how many grid points on the dangerous zone are covered by the fence
     def coverage_dangerous_zone(self, coverage_dict, dangerous_zone_radius=1.5):
         bad_placement_flag = True
         human_arm = 1
@@ -178,6 +191,9 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
                         bad_placement_flag = False
                 return bad_placement_flag
             else:
+                # if the fence is near the robot, not only the points directly under the fence,
+                # but also the points in the projected area should be count.
+                # since the human cannot get through the narrow space between robot and the fence
                 extended_corner_x, extended_corner_y = self.extended_contour()
                 for (x, y) in coverage_dict:
                     if CFence.check(extended_corner_x, extended_corner_y, x, y):
@@ -188,4 +204,3 @@ class CFence(CSensor):  # Fence only influences the movement direction of human
     class Factory:
         @staticmethod
         def create(parameters): return CFence(**parameters)
-

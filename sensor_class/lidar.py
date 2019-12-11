@@ -36,8 +36,8 @@ class CLidar(CSensor):
                 self.plot_scan(plt, rx, ry, color='g')
                 self.signal_output(rx, ry)
 
+    # object detection main function
     def object_detection(self, human):
-        # Note: In the first version, Lidar only detects the human
         x, y, angle, r = [], [], [], []
         gx, gy = human.standing_area()
         for vx, vy in zip(gx, gy):
@@ -58,6 +58,7 @@ class CLidar(CSensor):
     def cover_area(self):
         return self.max_angle / (2 * np.pi) * np.pi * np.square(self.range)
 
+    # for visualization when generating the sensors
     def cover_bins(self):
         heading = np.pi - math.atan2(self.x_base, self.y_base)
         x_ = [self.range * np.sin(theta) * np.cos(heading) - self.range * np.cos(theta) *
@@ -69,6 +70,7 @@ class CLidar(CSensor):
               for theta in np.arange(-self.max_angle / 2, self.max_angle / 2, step=0.2)]
         return x_, y_
 
+    # give a rough status judgement
     def signal_output(self, rx, ry, safe=3, dangerous_=2):
         if len(rx) > 0:
             distance_min = np.min([math.hypot(ix, iy) for (ix, iy) in zip(rx, ry)])
@@ -89,11 +91,13 @@ class CLidar(CSensor):
         v2_u = CLidar.unit_vector(v2)
         return np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))
 
+    # ray casting filter
     def ray_casting_filter(self, xl, yl, thetal, rangel, distance):
         rx, ry = [], []
+        # init the lidar results with "inf"
+        # at first, we assume it has cover range of (2*pi), just for one easy calculation
         rangedb = [float("inf") for _ in range(
             int(np.floor((np.pi * 2.0) / self.angle_res)) + 1)]
-        # init the lidar results with "inf"
 
         for i in range(len(thetal)):
             angleid = int(round(thetal[i] / self.angle_res))
@@ -105,6 +109,8 @@ class CLidar(CSensor):
             angle_in_occlusion = np.abs(temp_angle) < self.occlusion_angle
             robot_in_between = distance < self.distance2robot
             if robot_in_between:
+                # when robot is between human and laser, we should consider the occlusion of the laser
+                # bins with robot base
                 if rangedb[angleid] > rangel[i] and rangel[i] < self.range and rangel[i] < distance and angle_in_range:
                     rangedb[angleid] = rangel[i]
             elif not robot_in_between:
@@ -129,6 +135,7 @@ class CLidar(CSensor):
         else:
             plt.text(-7, 7, "Dangerous", fontsize=14, color='red')
 
+    # used for visualization when generate the sensors
     def visualization(self, fig):
         x, y = self.cover_bins()
         temp_x, temp_y = x[0], y[0]
@@ -138,6 +145,7 @@ class CLidar(CSensor):
             temp_x, temp_y = ix, iy
         plt.text(-7, -7, f"Generate One LiDAR", fontsize=14, color='red')
 
+    # visualize the detection results
     def plot_scan(self, plt, ox, oy, color='g'):
         x = [ox[i] for i in range(len(ox))]
         y = [oy[i] for i in range(len(ox))]
@@ -145,6 +153,7 @@ class CLidar(CSensor):
         for (ix, iy) in zip(x, y):
             plt.plot([self.x_base, ix], [self.y_base, iy], color)
 
+    # check how many grid points of the dangerous zoe are covered
     def coverage_dangerous_zone(self, coverage_dict, dangerous_zone_radius=1.5):
         keys = list(coverage_dict.keys())
         bad_placement_flag = True
@@ -172,6 +181,7 @@ class CLidar(CSensor):
         else:
             return bad_placement_flag
 
+    # the API for sensor factory
     class Factory:
         @staticmethod
         def create(parameters): return CLidar(**parameters)

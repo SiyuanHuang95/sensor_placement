@@ -4,26 +4,26 @@ This repository serves for simulation environment of the optimization algorithms
 
 In one word, this optimization problem could be defined as how to use the minimal number or 
 cheapest sensor sets to ensure a best safety criteria. In the current version, we define the safety situation, when
-the block dots near the robot are covered by the sensor set, as the image bellow shows.
+the black dots near the robot are covered by the sensor set, as the image bellow shows.
 
 
 ![](sensor_class/out/scenario/sketch_problem.png)
 ## Sensor Types
 In the current  version, we defined three different types of sensors: Laser, Mat and Fence.
-1. Laser
+### 1. Laser
     - Parameters: Position, angle resolution, frame rate, detection range (distance and angle range)
     - Function: Detect worker's position when the worker moves in its' range.
     
     ![laser](sensor_class/out/gif/lidar.gif)
 
 
-2. Fence
+### 2. Fence
     - Parameters: Length, width, position
     - Function: Reflect the human motion's direction.
     
     ![Fence](sensor_class/out/gif/fence.gif)
 
-3. Mate
+### 3. Mate
     - Parameters: Position, length, width
     - Function: Detect worker's position when the worker directly on its' surface.
     
