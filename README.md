@@ -14,20 +14,20 @@ In the current  version, we defined three different types of sensors: Laser, Mat
     - Parameters: Position, angle resolution, frame rate, detection range (distance and angle range)
     - Function: Detect worker's position when the worker moves in its' range.
     
-    ![laser](sensor_class/out/gif/lidar.gif)
+![laser](sensor_class/out/gif/lidar.gif)
 
 
 ### 2. Fence
     - Parameters: Length, width, position
     - Function: Reflect the human motion's direction.
     
-    ![Fence](sensor_class/out/gif/fence.gif)
+![Fence](sensor_class/out/gif/fence.gif)
 
 ### 3. Mate
     - Parameters: Position, length, width
     - Function: Detect worker's position when the worker directly on its' surface.
     
-    ![Mate](sensor_class/out/gif/mat.gif)
+![Mate](sensor_class/out/gif/mat.gif)
 
 ## Working Scenario
 1. One industrial robot in the centre of working space, fully extended with maximal range.
