@@ -101,6 +101,7 @@ class CMate(CSensor):
 
     def visualization(self, fig):
         self.plot(fig)
+        plt.text(-7, -7, f"Generate One Mat", fontsize=14, color='red')
 
     def plot(self, fig):
         fig.plot(self.x_base, self.y_base, ".b")

@@ -104,6 +104,6 @@ class CHuman(object):
 
     def inside_working_area(self):
         if np.abs(self.x) > area_length or np.abs(self.y) > area_length:
-            self.heading = -self.heading
+            self.heading = -self.heading * 1.3
             self.x -= self.x/30
             self.y -= self.y/30

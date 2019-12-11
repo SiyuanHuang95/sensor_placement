@@ -34,7 +34,7 @@ class CLidar(CSensor):
             self.lidar_scanner += 1
             if len(rx) > 1:
                 self.plot_scan(plt, rx, ry, color='g')
-                # self.signal_output(rx, ry)
+                self.signal_output(rx, ry)
 
     def object_detection(self, human):
         # Note: In the first version, Lidar only detects the human
@@ -136,6 +136,7 @@ class CLidar(CSensor):
             plt.plot([self.x_base, ix], [self.y_base, iy], 'b')
             plt.plot([temp_x, ix], [temp_y, iy], 'b')
             temp_x, temp_y = ix, iy
+        plt.text(-7, -7, f"Generate One LiDAR", fontsize=14, color='red')
 
     def plot_scan(self, plt, ox, oy, color='g'):
         x = [ox[i] for i in range(len(ox))]
