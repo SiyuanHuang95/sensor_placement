@@ -14,17 +14,17 @@ dangerous_zone_radius = 2
 cwd = os.getcwd()
 
 # define different sensor parameters
-mate = CMate('Mate1', x=-3, y=4, width=4, length=6)
-fence = CFence('Fence1', x=3, y=3, length=4)
+mate = CMate('Mate1', x=3, y=4, width=4, length=6)
+fence = CFence('Fence1', x=-3, y=3, length=4)
 lidar = CLidar(x=3, y=-2)
-human = CHuman('Worker1', start_vel=2, start_pos_x=-7, start_pos_y=5, heading=-0.2 * np.pi)
+human = CHuman('Worker1', start_vel=2, start_pos_x=7, start_pos_y=5, heading=1.1 * np.pi)
 robot = CRobot(robot_range=dangerous_zone_radius, name='Robot1', start_vel=0.1, start_pos=0)
 
 counter = 0
 lidar_scanner = 0
 current_time = 0
 dt = 0.10  # time step
-simulation_time = 40  # time limit
+simulation_time = 100  # time limit
 fig, axes = plt.subplots(1, 1)  # use subplot for more stable and flexible visualization of the dynamic image
 lidar_time_gap = 1 / lidar.rate
 plt.ion()
@@ -32,9 +32,8 @@ plt.ion()
 save_flag = False
 
 while current_time < simulation_time:
+    # remember to clean the current image to display the image dynamically
     axes.cla()
-    # axes.axis("equal")
-    # axes = plt.gca()
     # set the axis limits
     axes.set_xlim([-10, 10])
     axes.set_ylim([-10, 10])
